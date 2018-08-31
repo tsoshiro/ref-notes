@@ -23,5 +23,8 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                          password: "foofoofoo",
                                          password_confirmation: "foofoofoo"}}
     end
+    follow_redirect! # リダイレクト先に遷移
+    assert_template 'users/show'
+    assert is_logged_in?
   end
 end
