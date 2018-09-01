@@ -8,7 +8,10 @@ class SessionsController < ApplicationController
     if user && user.authenticate(params[:session][:password])
       # ログイン成功
       log_in user
-      remember user
+
+      # チェックボックスがONならユーザーを記憶
+      params[:session][:remember_me] == '1' ? remember(user) : forget(user)
+
       redirect_to user # ユーザーのプロフィールページにリダイレクト
     else
       # ログイン失敗 : エラーメッセージ作成
