@@ -10,6 +10,9 @@ class User < ApplicationRecord
   validates :password, presence: true,
                        length: { minimum: 8 },
                        allow_nil: true
+  attr_accessor :remember_token
+
+                       
   def downcase_email
     email.downcase!
   end
@@ -18,5 +21,26 @@ class User < ApplicationRecord
   def User.digest(string)
     cost = ActiveModel::SecurePassword.min_cost ? BCrypt::Engine::MIN_COST : BCrypt::ENGINE.cost
     BCrypt::Password.create(string, cost: cost)
+  end
+  
+  # ランダムなトークンを返す
+  def User.new_token
+    SecureRandom.urlsafe_base64
+  end
+  
+  # トークンを記憶させる
+  def remember
+    self.remember_token = User.new_token
+    update_attribute(:remember_digest, User.digest(remember_token))
+  end
+  
+  # 渡されたトークンとダイジェストが一致したらtrue
+  def authenticated?(remember_token)
+    BCrypt::Password.new(remember_digest).is_password?(remember_token)
+  end
+  
+  # トークンを忘れる
+  def forget
+    update_attribute(:remember_digest, nil)
   end
 end
