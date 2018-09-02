@@ -14,19 +14,6 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_redirected_to login_url
   end
   
-  test "should redirect update when not logged in" do
-    name = "Hoge Hoge"
-    email ="hogeo@hogehoge.com"
-    patch user_path(@user), params: { user: { name: name,
-                                              email: email,
-                                              password: "",
-                                              password_confirmation: "" }}
-
-    assert_not flash.empty?
-    assert_redirected_to login_url
-  end
-  
-
   test "unsuccessful edit" do
     log_in_as(@user)
     
