@@ -12,7 +12,8 @@ class SessionsController < ApplicationController
       # チェックボックスがONならユーザーを記憶
       params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)
 
-      redirect_to @user # ユーザーのプロフィールページにリダイレクト
+      # ログイン前に行こうとしていた画面があるならそこに、ないならユーザープロフィール画面に飛ばす
+      redirect_back_or @user
     else
       # ログイン失敗 : エラーメッセージ作成
       flash.now[:danger] = 'メールアドレスかパスワードが無効です。'

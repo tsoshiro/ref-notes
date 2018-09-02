@@ -50,4 +50,15 @@ module SessionsHelper
     user = User.find_by(id: cookies.signed[:user_id])
     user.authenticate(cookies.signed[:remember_token])
   end
+  
+  # 記憶したURL(もしくはデフォルト値にリダイレクト)
+  def redirect_back_or(default)
+    redirect_to(session[:forwarding_url] || default)
+    session.delete(:forwarding_url)
+  end
+  
+  # アクセスしようとしたURLを記憶する
+  def store_location
+    session[:forwarding_url] = request.original_url if request.get?
+  end
 end

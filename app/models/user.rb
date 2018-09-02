@@ -9,7 +9,7 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true,
                        length: { minimum: 8 },
-                       allow_nil: true
+                      allow_nil: true # ユーザー情報更新でpasswordを空にしたときでも動く
   attr_accessor :remember_token
 
                        
