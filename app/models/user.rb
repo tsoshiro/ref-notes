@@ -28,6 +28,11 @@ class User < ApplicationRecord
     SecureRandom.urlsafe_base64
   end
   
+  # ランダムな文字列を返す
+  def User.get_random_string(count)
+    SecureRandom.base64(count)
+  end
+  
   # トークンを記憶させる
   def remember
     self.remember_token = User.new_token
@@ -44,4 +49,29 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+  
+  # Twitter Login
+  def self.find_for_oauth(auth)
+    user = User.where(uid: auth.uid, provider: auth.provider).first
+
+    unless user
+      user = User.create(
+        name:       auth.info.nickname,
+        uid:        auth.uid,
+        provider:   auth.provider,
+        email:      User.dummy_email(auth),
+        password:   User.get_random_string(8),
+        nickname:   auth.info.nickname,
+        image:     auth.info.image,
+        location:   auth.info.location
+        )
+    end
+    
+    user
+  end
+  
+  private
+    def self.dummy_email(auth)
+      "#{auth.uid}-#{auth.provider}@example.com"
+    end
 end

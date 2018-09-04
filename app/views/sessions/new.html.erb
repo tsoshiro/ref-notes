@@ -19,6 +19,9 @@
       <%= f.submit "ログイン", class: 'btn btn-primary' %>
       
     <% end %>
+    <div>
+      <%= link_to "Twitterでログイン", "auth/twitter" %>
+    </div>
     <p><%= link_to "パスワードを忘れた?", '#' %></p>
     <p><%= link_to "新規登録", signup_path %></p>  
   </div>

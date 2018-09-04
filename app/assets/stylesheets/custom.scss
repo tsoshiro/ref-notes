@@ -209,3 +209,10 @@ input {
     border-bottom: 1px solid $gray-lighter;
   }
 }
+
+
+/* custom flash */
+.alert-notice {
+    background-color: lightgray;
+    border-color: darkgray;
+}

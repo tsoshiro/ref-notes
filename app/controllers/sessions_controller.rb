@@ -21,8 +21,23 @@ class SessionsController < ApplicationController
     end
   end
   
+  def create_auth
+    user = User.find_for_oauth(request.env['omniauth.auth'])
+
+    # ユーザー認証が成功したら
+    if user
+      log_in user
+      flash[:notice] = "ユーザー認証が完了しました"
+      redirect_back_or user
+    else
+      flash[:danger] = "ユーザー認証に失敗しました"
+      redirect_to root_url
+    end
+  end
+  
   def destroy
     log_out if logged_in?
+    flash[:notice] = "ログアウトしました"
     redirect_to root_path
   end
 end
