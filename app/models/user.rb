@@ -59,7 +59,7 @@ class User < ApplicationRecord
         name:       auth.info.nickname,
         uid:        auth.uid,
         provider:   auth.provider,
-        email:      User.dummy_email(auth),
+        email:      auth.info.email || User.dummy_email(auth),
         password:   User.get_random_string(8),
         nickname:   auth.info.nickname,
         image:     auth.info.image,

@@ -47,6 +47,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Bootstrap
 gem 'bootstrap-sass', '3.3.7'
 gem 'jquery-rails'
+gem 'bootstrap-social-rails'
+gem 'font-awesome-rails'
+
 
 # Twitter Login
 gem 'omniauth'
