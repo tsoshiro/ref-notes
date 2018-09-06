@@ -22,7 +22,9 @@ class SessionsController < ApplicationController
   end
   
   def create_auth
-    user = User.find_for_oauth(request.env['omniauth.auth'])
+    auth = request.env['omniauth.auth']
+    user = User.find_for_oauth(auth)
+    p user
 
     # ユーザー認証が成功したら
     if user

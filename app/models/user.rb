@@ -11,7 +11,8 @@ class User < ApplicationRecord
                        length: { minimum: 8 },
                       allow_nil: true # ユーザー情報更新でpasswordを空にしたときでも動く
   attr_accessor :remember_token
-
+  
+  has_many :authorizations
                        
   def downcase_email
     email.downcase!
@@ -50,25 +51,40 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, nil)
   end
   
-  # Twitter Login
+  # SNS Login
   def self.find_for_oauth(auth)
-    user = User.where(uid: auth.uid, provider: auth.provider).first
+    # Authorizationモデルで検索
+    authorization = Authorization.find_from_hash(auth)
 
+    # Authorizationモデルがない場合、AuthorizationとUserを新規作成してUserを返す
+    unless authorization
+      authorization = Authorization.create_from_hash(auth)
+    end
+    
+    # Authorizationがあるなら、該当するユーザーがいるか検索
+    user = User.where(id: authorization.user_id).first
+
+    # Authorizationモデルはあるがユーザーがない場合は、新規作成してUserを返す
     unless user
-      user = User.create(
-        name:       auth.info.nickname,
-        uid:        auth.uid,
-        provider:   auth.provider,
-        email:      auth.info.email || User.dummy_email(auth),
-        password:   User.get_random_string(8),
-        nickname:   auth.info.nickname,
-        image:     auth.info.image,
-        location:   auth.info.location
-        )
+      user = User.create_from_hash!(auth)
+      
+      return user
     end
     
     user
   end
+  
+  # auth情報からユーザー作成して返す
+  def self.create_from_hash!(auth)
+    User.create(
+      name:       auth.info.nickname,
+      email:      auth.info.email || User.dummy_email(auth),
+      password:   User.get_random_string(8),
+      nickname:   auth.info.nickname,
+      image:     auth.info.image,
+      location:   auth.info.location
+      )
+  end  
   
   private
     def self.dummy_email(auth)
