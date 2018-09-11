@@ -8,7 +8,9 @@ class UsersController < ApplicationController
   end
   
   def show
-    @user = User.find(params[:id]) 
+    @user = User.find(params[:id])
+    # @user = User.friendly.find(params[:id])
+    
     
     # @microposts = @user.microposts.paginate(page: params[:page])
     # redirect_to root_url and return unless @user.activated?
@@ -54,7 +56,7 @@ class UsersController < ApplicationController
   
   private
     def user_params
-      params.require(:user).permit(:name, :email, :password)
+      params.require(:user).permit(:name, :email, :password, :canonical_name, :slug)
     end
     
     # before action

@@ -1,4 +1,13 @@
 class User < ApplicationRecord
+  extend FriendlyId
+  friendly_id :canonical_name, :use => :slugged
+  validates :canonical_name,
+    uniqueness: { case_sensitive: false },
+    # format: { with: /^[A-Za-z][\w-]*$/ },
+    length: { minimum: 3, maximum: 25 },
+    allow_nil: true
+  # validates_presence_of :slug
+  
   before_save :downcase_email
   validates :name, presence: true, length: { maximum: 150 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
@@ -84,7 +93,16 @@ class User < ApplicationRecord
       image:     auth.info.image,
       location:   auth.info.location
       )
-  end  
+  end
+  
+  def to_param
+    canonical_name ? canonical_name : id.to_s
+  end
+  
+  # canonical_nameがない場合は普通のfind
+  def self.find(arg)
+    find_by_canonical_name(arg) || super
+  end
   
   private
     def self.dummy_email(auth)

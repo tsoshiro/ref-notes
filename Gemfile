@@ -55,6 +55,9 @@ gem 'font-awesome-rails'
 gem 'omniauth'
 gem 'omniauth-twitter'
 
+# Friendly Id
+gem 'friendly_id', '~> 5.2.0' # Note: You MUST use 5.0.0 or greater for Rails 4.0+
+
 # env
 gem 'dotenv-rails'
 
