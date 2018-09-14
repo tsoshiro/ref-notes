@@ -21,10 +21,10 @@ class SessionsController < ApplicationController
     end
   end
   
+  # コールバック
   def create_auth
     auth = request.env['omniauth.auth']
     user = User.find_for_oauth(auth)
-    p user
 
     # ユーザー認証が成功したら
     if user
@@ -35,6 +35,12 @@ class SessionsController < ApplicationController
       flash[:danger] = "ユーザー認証に失敗しました"
       redirect_to root_url
     end
+  end
+  
+  # SNSログインキャンセル時の処理
+  def failure
+    flash[:danger] = "SNSログインに失敗しました"
+    redirect_to root_url
   end
   
   def destroy
