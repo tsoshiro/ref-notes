@@ -38,8 +38,9 @@ ActiveRecord::Schema.define(version: 2018_09_11_171807) do
     t.string "nickname"
     t.string "location"
     t.string "image"
-    t.string "slug", null: false
     t.string "canonical_name"
+    t.string "slug", null: false
+    t.index ["slug"], name: "index_users_on_slug", unique: true
   end
 
 end

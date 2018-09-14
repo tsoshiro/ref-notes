@@ -1,12 +1,12 @@
 class User < ApplicationRecord
   extend FriendlyId
-  friendly_id :canonical_name, :use => :slugged
+  friendly_id :canonical_name, use: :slugged
   validates :canonical_name,
     uniqueness: { case_sensitive: false },
     # format: { with: /^[A-Za-z][\w-]*$/ },
     length: { minimum: 3, maximum: 25 },
     allow_nil: true
-  # validates_presence_of :slug
+  validates_presence_of :slug
   
   before_save :downcase_email
   validates :name, presence: true, length: { maximum: 150 }
@@ -91,21 +91,27 @@ class User < ApplicationRecord
       password:   User.get_random_string(8),
       nickname:   auth.info.nickname,
       image:     auth.info.image,
-      location:   auth.info.location
+      location:   auth.info.location,
+      canonical_name: auth.info.nickname || User.auto_canonical_name(auth.info.email || User.dummy_email(auth))
       )
   end
-  
-  def to_param
-    canonical_name ? canonical_name : id.to_s
-  end
-  
+
   # canonical_nameがない場合は普通のfind
   def self.find(arg)
-    find_by_canonical_name(arg) || super
+    friendly.find(arg) || super
   end
   
   private
     def self.dummy_email(auth)
       "#{auth.uid}-#{auth.provider}@example.com"
+    end
+    
+    def self.auto_canonical_name(email)
+      email.split("@")[0].parameterize
+    end
+    
+    # nilじゃなくてもslugを更新する
+    def should_generate_new_friendly_id?
+     canonical_name_changed? || super
     end
 end
