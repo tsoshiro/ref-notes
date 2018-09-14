@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_09_11_171807) do
+ActiveRecord::Schema.define(version: 2018_09_14_173156) do
 
   create_table "authorizations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "provider"
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 2018_09_11_171807) do
   end
 
   create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
-    t.string "name"
+    t.string "display_name"
     t.string "email"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -38,7 +38,7 @@ ActiveRecord::Schema.define(version: 2018_09_11_171807) do
     t.string "nickname"
     t.string "location"
     t.string "image"
-    t.string "canonical_name"
+    t.string "user_name"
     t.string "slug", null: false
     t.index ["slug"], name: "index_users_on_slug", unique: true
   end

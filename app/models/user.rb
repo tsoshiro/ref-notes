@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   extend FriendlyId
-  friendly_id :canonical_name, use: :slugged
-  validates :canonical_name,
+  friendly_id :user_name, use: :slugged
+  validates :user_name,
     uniqueness: { case_sensitive: false },
     # format: { with: /^[A-Za-z][\w-]*$/ },
     length: { minimum: 3, maximum: 25 },
@@ -9,7 +9,7 @@ class User < ApplicationRecord
   validates_presence_of :slug
   
   before_save :downcase_email
-  validates :name, presence: true, length: { maximum: 150 }
+  validates :display_name, presence: true, length: { maximum: 150 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true,
                     length: { maximum: 255 }, 
@@ -86,17 +86,17 @@ class User < ApplicationRecord
   # auth情報からユーザー作成して返す
   def self.create_from_hash!(auth)
     User.create(
-      name:       auth.info.nickname,
+      display_name:       auth.info.nickname,
       email:      auth.info.email || User.dummy_email(auth),
       password:   User.get_random_string(8),
       nickname:   auth.info.nickname,
       image:     auth.info.image,
       location:   auth.info.location,
-      canonical_name: auth.info.nickname || User.auto_canonical_name(auth.info.email || User.dummy_email(auth))
+      user_name: auth.info.nickname || User.auto_user_name(auth.info.email || User.dummy_email(auth))
       )
   end
 
-  # canonical_nameがない場合は普通のfind
+  # user_nameがない場合は普通のfind
   def self.find(arg)
     friendly.find(arg) || super
   end
@@ -106,12 +106,12 @@ class User < ApplicationRecord
       "#{auth.uid}-#{auth.provider}@example.com"
     end
     
-    def self.auto_canonical_name(email)
+    def self.auto_user_name(email)
       email.split("@")[0].parameterize
     end
     
     # nilじゃなくてもslugを更新する
     def should_generate_new_friendly_id?
-     canonical_name_changed? || super
+     user_name_changed? || super
     end
 end

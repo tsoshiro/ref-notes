@@ -14,7 +14,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
   test "should redirect update when not logged in" do
     name = "Hoge Hoge"
     email ="hogeo@hogehoge.com"
-    patch user_path(@user), params: { user: { name: name,
+    patch user_path(@user), params: { user: { display_name: name,
                                               email: email,
                                               password: "",
                                               password_confirmation: "" }}

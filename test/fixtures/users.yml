@@ -1,19 +1,25 @@
 # Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 hogeo:
-  name: hogeo
+  user_name: hogeo
+  display_name: hogeo
+  slug: hogeo
   email: hogeo@example.com
   password_digest: <%= User.digest('hogehogehoge') %>
   admin: true
   
 michael:
-  name: Michael Example
+  user_name: Michael Example
+  display_name:  Michael Example
+  slug: <%= :michael.user_name.parameterize %>
   email: michael@example.com
   password_digest: <%= User.digest('hogehogehoge') %>
   
 <% 30.times do |n| %>
 user_<%= n %>:
-  name: <%= "User #{n}" %>
+  user_name: <%= "User #{n}" %>
+  display_name: <%= eval(":user_#{n}").user_name %>
+  slug: :<%= eval(":user_#{n}").user_name.parameterize %>
   email: <%= "user-#{n}@example.com" %>
   password_digest: <%= User.digest('hogehogehoge') %>
 <% end %>

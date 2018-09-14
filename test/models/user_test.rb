@@ -3,8 +3,10 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
   
   def setup
-    @user = User.new( name:"Hogehoge Fugao",
+    @user = User.new( user_name: "hogeo",
+                      display_name: "Hogehoge Fugao",
                       email:"fugao@hogeo.com",
+                      slug: "hogeo",
                       password:"password",
                       password_confirmation:"password")
   end
@@ -14,12 +16,15 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "name should be present" do
-    @user.name = " "
+    @user.user_name = " "
+    @user.display_name = " "
     assert_not @user.valid?
   end
   
   test "name should not be too long" do
-    @user.name = 'a' * 151
+    @user.user_name = 'a' * 26
+    @user.display_name = 'a' * 151
+    
     assert_not @user.valid?
   end
   
@@ -42,7 +47,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "email should not be written in a wrong format" do
-    invalid_addresses = %w[user@example,com user_at_foo.org user.name@example. 
+    invalid_addresses = %w[user@example,com user_at_foo.org user.user_name@example. 
                         foo@bar_baz.com foo@bar+baz.com foo@bar..com]
     
     invalid_addresses.each do |address|
