@@ -1,14 +1,16 @@
 class User < ApplicationRecord
   extend FriendlyId
   friendly_id :user_name, use: :slugged
-  validates :user_name,
-    uniqueness: { case_sensitive: false },
-    # format: { with: /^[A-Za-z][\w-]*$/ },
-    length: { minimum: 3, maximum: 25 },
-    allow_nil: true
+  
+  VALID_USER_NAME_REGEX = /\A\w[^\.^\s]+\z/i
+  validates :user_name, presence: true,
+                        uniqueness: { case_sensitive: false },
+                        format: { with: VALID_USER_NAME_REGEX },
+                        length: { minimum: 3, maximum: 25 },
+                        allow_nil: false
   validates_presence_of :slug
   
-  before_save :downcase_email
+  before_save :downcase
   validates :display_name, presence: true, length: { maximum: 150 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true,
@@ -18,12 +20,13 @@ class User < ApplicationRecord
   has_secure_password
   validates :password, presence: true,
                        length: { minimum: 8 },
-                      allow_nil: true # ユーザー情報更新でpasswordを空にしたときでも動く
+                       allow_nil: true # ユーザー情報更新でpasswordを空にしたときでも動く
   attr_accessor :remember_token
   
   has_many :authorizations
-                       
-  def downcase_email
+
+  def downcase
+    user_name.downcase!
     email.downcase!
   end
   

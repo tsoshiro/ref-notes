@@ -15,19 +15,52 @@ class UserTest < ActiveSupport::TestCase
     assert @user.valid?
   end
   
-  test "name should be present" do
+  # user_name test
+  test "user_name should be present" do
     @user.user_name = " "
+    assert_not @user.valid?
+  end
+  
+  test "user_name should not be too long" do
+    @user.user_name = 'a' * 26
+    assert_not @user.valid?
+  end
+  
+  test "user_name should be written in right format" do
+    valid_user_name = %w[hogeo HOGEO hOgEo hoge-hogeo hoge_hogo]
+    valid_user_name.each do |user_name|
+      @user.user_name = user_name
+      assert @user.valid?, "#{user_name} should be valid"
+    end
+  end
+  
+  test "user_name should not be written in wrong format" do
+    invalid_user_name = %w["hoge hogeo" hoge.hogeo ほげお]
+    invalid_user_name.each do |user_name|
+      @user.user_name = user_name
+      assert_not @user.valid?, "#{user_name.inspect} should be invalid"
+    end
+  end
+  
+  test "user_name should be saved as lower case" do
+    mixed_case_user_name = "hogeHogeO"
+    @user.user_name = mixed_case_user_name
+    @user.save
+    assert_equal mixed_case_user_name.downcase, @user.reload.email
+  end
+
+  # display_name test
+  test "display_name should be present" do
     @user.display_name = " "
     assert_not @user.valid?
   end
   
-  test "name should not be too long" do
-    @user.user_name = 'a' * 26
+  test "display_name should not be too long" do
     @user.display_name = 'a' * 151
-    
     assert_not @user.valid?
   end
   
+  # Email test
   test "email should be present" do
     @user.email = " "
     assert_not @user.valid?
@@ -69,6 +102,7 @@ class UserTest < ActiveSupport::TestCase
     assert_not duplicate_user.valid?
   end
   
+  # Password test
   test "password should be not be empty" do
     @user.password = @user.password_confirmation = " " * 8
     assert_not @user.valid?
