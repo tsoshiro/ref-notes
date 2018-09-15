@@ -2,24 +2,24 @@
 
 hogeo:
   user_name: hogeo
-  display_name: hogeo
+  display_name: hog hogeo
   slug: hogeo
   email: hogeo@example.com
   password_digest: <%= User.digest('hogehogehoge') %>
   admin: true
   
 michael:
-  user_name: Michael Example
+  user_name: michael
   display_name:  Michael Example
-  slug: <%= :michael.user_name.parameterize %>
+  slug: michael
   email: michael@example.com
   password_digest: <%= User.digest('hogehogehoge') %>
   
 <% 30.times do |n| %>
 user_<%= n %>:
-  user_name: <%= "User #{n}" %>
-  display_name: <%= eval(":user_#{n}").user_name %>
-  slug: :<%= eval(":user_#{n}").user_name.parameterize %>
+  user_name: <%= "user-#{n}" %>
+  display_name: <%= "User-#{n}" %>
+  slug: <%= "user-#{n}" %>
   email: <%= "user-#{n}@example.com" %>
   password_digest: <%= User.digest('hogehogehoge') %>
 <% end %>

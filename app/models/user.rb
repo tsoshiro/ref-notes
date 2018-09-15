@@ -1,13 +1,12 @@
 class User < ApplicationRecord
   extend FriendlyId
-  friendly_id :user_name, use: :slugged
+  friendly_id :user_name , use: :slugged
   
   VALID_USER_NAME_REGEX = /\A\w[^\.^\s]+\z/i
   validates :user_name, presence: true,
                         uniqueness: { case_sensitive: false },
                         format: { with: VALID_USER_NAME_REGEX },
-                        length: { minimum: 3, maximum: 25 },
-                        allow_nil: false
+                        length: { minimum: 3, maximum: 25 }
   validates_presence_of :slug
   
   before_save :downcase

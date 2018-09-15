@@ -27,7 +27,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "user_name should be written in right format" do
-    valid_user_name = %w[hogeo HOGEO hOgEo hoge-hogeo hoge_hogo]
+    valid_user_name = ["hogeo","HOGEO","hOgEo","hoge-hogeo","hoge_hogo"]
     valid_user_name.each do |user_name|
       @user.user_name = user_name
       assert @user.valid?, "#{user_name} should be valid"
@@ -35,7 +35,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "user_name should not be written in wrong format" do
-    invalid_user_name = %w["hoge hogeo" hoge.hogeo ほげお]
+    invalid_user_name = ["hoge hogeo", "hoge.hogeo","ほげお"]
     invalid_user_name.each do |user_name|
       @user.user_name = user_name
       assert_not @user.valid?, "#{user_name.inspect} should be invalid"
@@ -46,7 +46,7 @@ class UserTest < ActiveSupport::TestCase
     mixed_case_user_name = "hogeHogeO"
     @user.user_name = mixed_case_user_name
     @user.save
-    assert_equal mixed_case_user_name.downcase, @user.reload.email
+    assert_equal mixed_case_user_name.downcase, @user.reload.user_name
   end
 
   # display_name test

@@ -19,11 +19,12 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     
     get edit_user_path(@user)
     assert_template 'users/edit'
-    patch user_path(@user), params: { user: { user_name: "",
+    patch user_path(@user), params: { user: { user_name: "fuga fugao",
+                                              display_name: " ",
                                               email: "foo@invalid",
                                               password: "foo" }}
     assert_template 'users/edit'
-    assert_select 'div#error_explanation li', count: 3
+    assert_select 'div#error_explanation li', count: 4
   end
   
   test "successful edit" do
@@ -33,9 +34,11 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_redirected_to edit_user_url(@user)
     assert_nil session[:forwarding_url]
     
-    name = "Hoge Hoge"
+    user_name = "hoge-hogeo"
+    display_name = "Hoge hogeo"
     email ="hogeo@hogehoge.com"
-    patch user_path(@user), params: { user: { user_name: name,
+    patch user_path(@user), params: { user: { user_name: user_name,
+                                              display_name: display_name,
                                               email: email,
                                               password: "" }}
 
