@@ -2,7 +2,7 @@
 
 hogeo:
   user_name: hogeo
-  display_name: hog hogeo
+  display_name: hoge hogeo
   slug: hogeo
   email: hogeo@example.com
   password_digest: <%= User.digest('hogehogehoge') %>

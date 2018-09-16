@@ -3,12 +3,7 @@ require 'test_helper'
 class UserTest < ActiveSupport::TestCase
   
   def setup
-    @user = User.new( user_name: "hogeo",
-                      display_name: "Hogehoge Fugao",
-                      email:"fugao@hogeo.com",
-                      slug: "hogeo",
-                      password:"password",
-                      password_confirmation:"password")
+    @user = users(:hogeo)
   end
   
   test "should be valid" do 
@@ -27,7 +22,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "user_name should be written in right format" do
-    valid_user_name = ["hogeo","HOGEO","hOgEo","hoge-hogeo","hoge_hogo"]
+    valid_user_name = ["fugao","FUGAO","fUgAO","fuga-fugao","fuga_fugao"]
     valid_user_name.each do |user_name|
       @user.user_name = user_name
       assert @user.valid?, "#{user_name} should be valid"
@@ -35,7 +30,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "user_name should not be written in wrong format" do
-    invalid_user_name = ["hoge hogeo", "hoge.hogeo","ほげお"]
+    invalid_user_name = ["fuga fugao", "fuga.fugao","ほげお"]
     invalid_user_name.each do |user_name|
       @user.user_name = user_name
       assert_not @user.valid?, "#{user_name.inspect} should be invalid"
@@ -72,7 +67,7 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test "email should be written in a right format" do
-    valid_addresses = %w[user@example.com USER@foo.COM A_US-ER@foo.bar.org first.last@foo.jp alice+bob@baz.cn]
+    valid_addresses = %w[sample_user@example.com USER@foo.COM A_US-ER@foo.bar.org first.last@foo.jp alice+bob@baz.cn]
     valid_addresses.each do |address|
       @user.email = address
       assert @user.valid?, "#{address} should be valid"
