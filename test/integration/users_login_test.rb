@@ -62,4 +62,50 @@ class UsersLoginTest < ActionDispatch::IntegrationTest
     assert assigns(:user).remember_token.nil?
     assert_empty cookies['remember_token']
   end
+  
+  # SNSログイン
+  test "login with SNS" do
+    OmniAuth.config.test_mode = true
+    
+    # モックデータ
+    OmniAuth.config.mock_auth[:twitter] = OmniAuth::AuthHash.new({
+      provider: 'twitter', 
+      uid: '123545', 
+      info: { nickname: 'twfugao' }
+    })
+    
+    Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+    assert_difference 'User.count', 1 do
+      get '/auth/twitter' # Twitterログイン
+      assert_redirected_to '/auth/twitter/callback' # 認証し、コールバック
+      follow_redirect! # リダイレクト先についていく
+      @twitter_user = User.find('twfugao') # この時点でユーザー生成されている
+      assert_redirected_to @twitter_user # ユーザーのページに遷移
+    end
+  end
+  
+  # SNSログイン失敗
+  # test "login failed with SNS" do
+  #   OmniAuth.config.test_mode = true
+    
+  #   # 失敗時にFailureにリダイレクトさせる
+  #   OmniAuth.config.on_failure = Proc.new { |env|
+  #   OmniAuth::FailureEndpoint.new(env).redirect_to_failure
+  #   }
+    
+  #   # モックデータ
+  #   OmniAuth.config.mock_auth[:twitter] = :invalid_credentials
+    
+  #   Rails.application.env_config["omniauth.auth"] = OmniAuth.config.mock_auth[:twitter]
+    
+  #   assert_no_difference 'User.count', 1 do 
+  #     get '/auth/twitter' # Twitterログイン
+  #     assert_redirected_to '/auth/twitter/callback'
+  #     follow_redirect!
+  #     assert_redirected_to '/auth/failure' # 認証失敗
+  #     follow_redirect! # リダイレクト先についていく
+  #     redirected_to root_url
+  #     assert_not flash.empty?
+  #   end
+  # end
 end
