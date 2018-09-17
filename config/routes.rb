@@ -19,4 +19,5 @@ Rails.application.routes.draw do
   get     '/auth/failure', to: 'sessions#failure'
 
   resources :users
+  resources :account_activations, only: [:edit]
 end

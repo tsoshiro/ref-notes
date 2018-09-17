@@ -9,7 +9,10 @@ class User < ApplicationRecord
                         length: { minimum: 3, maximum: 25 }
   validates_presence_of :slug
   
+  attr_accessor :remember_token, :activation_token
+  before_create :create_activation_digest
   before_save :downcase
+  
   validates :display_name, presence: true, length: { maximum: 150 }
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z\d\-]+)*\.[a-z]+\z/i
   validates :email, presence: true,
@@ -20,14 +23,8 @@ class User < ApplicationRecord
   validates :password, presence: true,
                        length: { minimum: 8 },
                        allow_nil: true # ユーザー情報更新でpasswordを空にしたときでも動く
-  attr_accessor :remember_token
   
   has_many :authorizations
-
-  def downcase
-    user_name.downcase!
-    email.downcase!
-  end
   
   # 文字列のハッシュ値を返す
   def User.digest(string)
@@ -64,7 +61,7 @@ class User < ApplicationRecord
   
   # SNS Login
   def self.find_for_oauth(auth)
-    # Authorizationモデルで検索
+    # Authorizationモデルで検索。いない場合はUser.create_from_hashでユーザーごと作成
     authorization = Authorization.find_from_hash(auth)
 
     # Authorizationモデルがない場合、AuthorizationとUserを新規作成してUserを返す
@@ -104,6 +101,22 @@ class User < ApplicationRecord
   end
   
   private
+    # メールアドレス、user_idをdowncaseにする
+    def downcase
+      # user_name.downcase!
+      # email.downcase!
+      
+      self.user_name = user_name.downcase
+      self.email = email.downcase
+    end
+    
+    # Activation digestとtokenを作成・代入
+    def create_activation_digest
+      self.activation_token = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
+  
+  
     def self.dummy_email(auth)
       "#{auth.uid}-#{auth.provider}@example.com"
     end

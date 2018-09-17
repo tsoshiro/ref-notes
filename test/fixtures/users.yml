@@ -7,6 +7,8 @@ hogeo:
   email: hogeo@example.com
   password_digest: <%= User.digest('hogehogehoge') %>
   admin: true
+  activated: true,
+  activated_at: <%= Time.zone.now %>
   
 michael:
   user_name: michael
@@ -14,6 +16,8 @@ michael:
   slug: michael
   email: michael@example.com
   password_digest: <%= User.digest('hogehogehoge') %>
+  activated: true,
+  activated_at: <%= Time.zone.now %>
   
 <% 30.times do |n| %>
 user_<%= n %>:
@@ -22,4 +26,6 @@ user_<%= n %>:
   slug: <%= "user-#{n}" %>
   email: <%= "user-#{n}@example.com" %>
   password_digest: <%= User.digest('hogehogehoge') %>
+  activated: true,
+  activated_at: <%= Time.zone.now %>
 <% end %>
