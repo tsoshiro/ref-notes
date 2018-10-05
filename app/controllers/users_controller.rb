@@ -28,9 +28,13 @@ class UsersController < ApplicationController
     @user = auto_fix_display_name_and_slug(User.new(user_params))
     if @user.save
       # 保存の成功処理
-      log_in @user
-      flash[:success] = "#{APP_NAME}へようこそ！"
-      redirect_to @user
+      UserMailer.account_activation(@user).deliver_now
+      flash[:info] = "Emailを確認し、アカウントを有効化してください"
+      redirect_to root_url
+      
+      # log_in @user
+      # flash[:success] = "#{APP_NAME}へようこそ！"
+      # redirect_to @user
     else
       render 'new'
     end
