@@ -48,7 +48,7 @@ class User < ApplicationRecord
     update_attribute(:remember_digest, User.digest(remember_token))
   end
 
-  # 渡されたトークンとダイジェストが一致したらtrue
+  # 渡されたトークンがダイジェストと一致したらtrue
   def authenticated?(attribute, token)
     digest = send("#{attribute}_digest")
     return false if digest.nil?
