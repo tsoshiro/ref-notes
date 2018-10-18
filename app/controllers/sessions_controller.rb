@@ -15,7 +15,7 @@ class SessionsController < ApplicationController
         # ログイン前に行こうとしていた画面があるならそこに、ないならユーザープロフィール画面に飛ばす
         redirect_back_or @user
       else
-        message = 'アカウントは有効化されていません'
+        message = 'アカウントは有効化されていません\n'
         message += 'Emailに送られた有効化リンクを確認してください'
         flash[:warning] = message
         redirect_to root_url

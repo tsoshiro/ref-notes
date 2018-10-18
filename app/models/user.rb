@@ -92,7 +92,8 @@ class User < ApplicationRecord
       nickname:   auth.info.nickname,
       image:     auth.info.image,
       location:   auth.info.location,
-      user_name: auth.info.nickname || User.auto_user_name(auth.info.email || User.dummy_email(auth))
+      user_name: auth.info.nickname || User.auto_user_name(auth.info.email || User.dummy_email(auth)),
+      activated: true # SNS経由ログインの場合はactivation不要
       )
   end
 
