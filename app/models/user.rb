@@ -102,6 +102,16 @@ class User < ApplicationRecord
     friendly.find(arg) || super
   end
 
+  # 有効化メソッド
+  def activate
+    update_columns(activated: true, activated_at: Time.zone.now)
+  end
+
+  # 有効化用メールを送信
+  def send_activation_email
+    UserMailer.account_activation(self).deliver_now
+  end
+
   private
     # メールアドレス、user_idをdowncaseにする
     def downcase
