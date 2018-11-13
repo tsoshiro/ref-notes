@@ -49,19 +49,4 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_template 'users/show'
     assert is_logged_in?
   end
-
-  # test "valid submission" do
-  #   get signup_path
-  #   assert_difference 'User.count', 1 do
-  #     post users_path, params: { user: { user_name: "fugao",
-  #                                        display_name: "Fuga Fugao",
-  #                                        slug: "fugao",
-  #                                        email: "user@valid.com",
-  #                                        password: "foofoofoo",
-  #                                        password_confirmation: "foofoofoo"}}
-  #   end
-  #   follow_redirect! # リダイレクト先に遷移
-  #   # assert_template 'users/show'
-  #   # assert is_logged_in?
-  # end
 end

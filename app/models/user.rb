@@ -115,9 +115,6 @@ class User < ApplicationRecord
   private
     # メールアドレス、user_idをdowncaseにする
     def downcase
-      # user_name.downcase!
-      # email.downcase!
-
       self.user_name = user_name.downcase
       self.email = email.downcase
     end
