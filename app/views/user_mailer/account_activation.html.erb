@@ -1,0 +1,9 @@
+<h1><%= APP_NAME %></h1>
+
+<p>
+  <%= @user.display_name %>さん、こんにちは。<br>
+  <%= APP_NAME %>にようこそ。以下のリンクをクリックして、アカウントを有効化しましょう！
+</p>
+
+<%= link_to "アカウント有効化", edit_account_activation_url(@user.activation_token,
+                                                            email: @user.email) %>
